@@ -1,0 +1,54 @@
+#!/usr/bin/env python3
+
+import re
+from requests_html import HTMLSession
+import requests
+
+available_courses = []
+session = HTMLSession()
+
+URL = 'https://alunos.uminho.pt/PT/estudantes/Paginas/InfoUteisHorarios.aspx'
+
+# GET DATA FROM HORARIOS
+r = session.get(URL)
+# GET THE LIST WITH THE AVAILABLE COURSES
+items = r.html.find('.rcbList', first=True)
+items = re.split(r'[\r\n]+', str(items.text))
+for course in items:
+    available_courses.append(course)
+
+PARAMS = {
+    "__EVENTTARGET":"ctl00$ctl40$g_e84a3962_8ce0_47bf_a5c3_d5f9dd3927ef$ctl00$chkMostraExpandido",
+    "__EVENTVALIDATION":"/wEdAAyQh6xZus4KL9HVQBA+1/BUrROcG/8GTOWJaCIMnayLMMK4mBsQGbpvNM54w6t6SV9gG4FRWYymGg8PWc+BN/ITfCv7PVlCIt4obEFKHIyn17pZd2cN//AHqxgoCQnCEZNAXeucDL35ItDJwoKj+8gDXwzO4nlSEvN+S94/bfd73+Pw5o1RPld4qYkrtMYfr/3sgV4OW2XLOHQLrNuDvJUDBQkCjQcCsbVEOq9mJAoEWderb/BQmvxL/z5X+jHiIW5SF7yJynLlUVVRsCqckSaxTUupqcpuAdYOn4H1vJhm5g==",
+    "__REQUESTDIGEST":"0x1634568D77C88A8D6DAB7537405C6EFB85C18526483315056E6C7C1EBC011C53AB3F92A1B72FDA58D9604BDDE239C7F517769E991C7D30841C5794E8104AB5C4,18+Oct+2019+15:49:39+-0000",
+    "__SCROLLPOSITIONX":"0",
+    "__SCROLLPOSITIONY":"0",
+    "__VIEWSTATE":"/wEPDwUKMTI4OTM2MzEwMg9kFgJmD2QWAgIBD2QWBAIBD2QWBAIGD2QWAmYPZBYCAgEPFgIeE1ByZXZpb3VzQ29udHJvbE1vZGULKYgBTWljcm9zb2Z0LlNoYXJlUG9pbnQuV2ViQ29udHJvbHMuU1BDb250cm9sTW9kZSwgTWljcm9zb2Z0LlNoYXJlUG9pbnQsIFZlcnNpb249MTUuMC4wLjAsIEN1bHR1cmU9bmV1dHJhbCwgUHVibGljS2V5VG9rZW49NzFlOWJjZTExMWU5NDI5YwFkAhQPZBYCAgEPZBYEAgEPZBYCAgIPDxYCHgdWaXNpYmxlaGRkAgIPZBYCZg88KwAGAGQCCQ9kFiACAQ9kFgICAQ9kFgQFJmdfZTg0YTM5NjJfOGNlMF80N2JmX2E1YzNfZDVmOWRkMzkyN2VmD2QWAmYPDxYCHg5ob3JhcGFyYW1ldHJvczKeBgABAAAA/////wEAAAAAAAAADAIAAABVVU1pbmhvLlBB…mZfYTVjM19kNWY5ZGQzOTI3ZWYkY3RsMDAkZGF0YUN1cnNvBUdjdGwwMCRjdGw0MCRnX2U4NGEzOTYyXzhjZTBfNDdiZl9hNWMzX2Q1ZjlkZDM5MjdlZiRjdGwwMCRkYXRhV2Vla1NlbGVjdAVQY3RsMDAkY3RsNDAkZ19lODRhMzk2Ml84Y2UwXzQ3YmZfYTVjM19kNWY5ZGQzOTI3ZWYkY3RsMDAkZGF0YVdlZWtTZWxlY3QkY2FsZW5kYXIFUGN0bDAwJGN0bDQwJGdfZTg0YTM5NjJfOGNlMF80N2JmX2E1YzNfZDVmOWRkMzkyN2VmJGN0bDAwJGRhdGFXZWVrU2VsZWN0JGNhbGVuZGFyBUtjdGwwMCRjdGw0MCRnX2U4NGEzOTYyXzhjZTBfNDdiZl9hNWMzX2Q1ZjlkZDM5MjdlZiRjdGwwMCRjaGtNb3N0cmFFeHBhbmRpZG95rjXAUZ+NKxniGdn7QZjQfeVBeoqZHvJKQI1yRbM2JA==",
+    "__VIEWSTATEGENERATOR":"691222F7",
+    "_maintainWorkspaceScrollPosition":"510",
+    "ctl00_ctl40_g_e84a3962_8ce0_47bf_a5c3_d5f9dd3927ef_ctl00_dataWeekSelect_calendar_AD":"[[2019,9,9],[2020,6,21],[2019,10,18]]",
+    "ctl00_ctl40_g_e84a3962_8ce0_47bf_a5c3_d5f9dd3927ef_ctl00_dataWeekSelect_calendar_SD":"[]",
+    "ctl00_ctl40_g_e84a3962_8ce0_47bf_a5c3_d5f9dd3927ef_ctl00_dataWeekSelect_ClientState":'{"minDateStr":"2019-09-09-00-00-00","maxDateStr":"2020-06-21-00-00-00"}',
+    "ctl00_ctl40_g_e84a3962_8ce0_47bf_a5c3_d5f9dd3927ef_ctl00_dataWeekSelect_dateInput_ClientState":'{"enabled":true,"emptyMessage":"","validationText":"2019-10-18-00-00-00","valueAsString":"2019-10-18-00-00-00","minDateStr":"2019-09-09-00-00-00","maxDateStr":"2020-06-21-00-00-00","lastSetTextBoxValue":"18-10-2019"}',
+    "ctl00$ctl40$g_e84a3962_8ce0_47bf_a5c3_d5f9dd3927ef$ctl00$dataAnoCurricular":"4",
+    "ctl00$ctl40$g_e84a3962_8ce0_47bf_a5c3_d5f9dd3927ef$ctl00$dataCurso":"Mestrado+Integrado+em+Engenharia+Informática",
+    "ctl00$ctl40$g_e84a3962_8ce0_47bf_a5c3_d5f9dd3927ef$ctl00$dataWeekSelect":"2019-10-18",
+    "ctl00$ctl40$g_e84a3962_8ce0_47bf_a5c3_d5f9dd3927ef$ctl00$dataWeekSelect$dateInput":"18-10-2019",
+    "MSOSPWebPartManager_DisplayModeName":"Browse",
+    "MSOSPWebPartManager_EndWebPartEditing":"false",
+    "MSOSPWebPartManager_ExitingDesignMode":"false",
+    "MSOSPWebPartManager_OldDisplayModeName":"Browse",
+    "MSOSPWebPartManager_StartWebPartEditingName":"false",
+    "MSOTlPn_Button":"none",
+    "MSOTlPn_ShowSettings":"False",
+    "MSOTlPn_View":"0"
+#ctl00_ctl40_g_e84a3962_8ce0_47bf_a5c3_d5f9dd3927ef_ctl00_dataCurso_ClientState
+}
+
+response = requests.get(
+    url = URL,
+    params = PARAMS
+)
+
+#result = session.get("https://alunos.uminho.pt/PT/estudantes/Paginas/InfoUteisHorarios.aspx?ctl00%24ctl40%24g_e84a3962_8ce0_47bf_a5c3_d5f9dd3927ef%24ctl00%24dataCurso=Mestrado%2Bem%2BComunica%C3%A7%C3%A3o%2Bde%2BCi%C3%AAncia%2B%28P%C3%B3s-Laboral%29")
+print(available_courses)
